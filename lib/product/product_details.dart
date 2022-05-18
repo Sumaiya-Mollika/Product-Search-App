@@ -39,13 +39,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'কাঙ্ক্ষিত পণ্যটি খুঁজুন',
-                  suffixIcon: IconButton(
-                      icon: Icon(Icons.search),
-                      onPressed: () {
-                        //   showSearch(
-                        //       context: context, delegate: SearchList());
-                        // },
-                      }),
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.search), onPressed: () {}),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none),

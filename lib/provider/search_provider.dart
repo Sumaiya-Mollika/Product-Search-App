@@ -4,13 +4,15 @@ import 'package:q_tech_app/model/model_class.dart';
 
 class SearchProvider with ChangeNotifier {
   SearchSuggestion searchData = SearchSuggestion();
-  // List<Results> productResultsList = [];
-  // List<Results> productResultsListSearch = [];
+  List<Results> resultList = [];
+  List<Results> searchResultList = [];
   bool loading = false;
 
   getData(context) async {
     loading = true;
     searchData = await httpRequest(context) as SearchSuggestion;
+    resultList = searchData.data!.products!.results!;
+    searchResultList = resultList;
     //    setState(() {
     //   productSearch = value;
     //   productResultsList = productSearch!.data!.products!.results!;

@@ -86,206 +86,207 @@ class _SearchScreenState extends State<SearchScreen> {
   //     productResultsListSearch = productResultsList;
   //   });
   // }
-  dynamic resultList;
-  dynamic searchResultList;
+  // dynamic resultList;
+  // dynamic searchResultList;
   @override
   Widget build(BuildContext context) {
     final searchItem = Provider.of<SearchProvider>(context);
-    final product = searchItem.searchData.data!.products!.results!;
+    // final product = searchItem.searchData.data!.products!.results!;
     // var copyProduct = product;
-    setState(() {
-      resultList = product;
-      searchResultList = resultList;
-    });
+    // setState(() {
+    //   resultList = product;
+    //   searchResultList = resultList;
+    // });
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xFFE5E5E5),
-        body: Column(
-          children: [
-            Container(
-              margin: EdgeInsets.all(10),
-              height: 45,
-              padding: EdgeInsets.only(left: 20),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.black)),
-              child: TextFormField(
-                onChanged: (String value) {
-                  setState(() {
-                    searchResultList = resultList
-                        .where((element) => element.brand!.slug!
-                            .startsWith(searchController.text))
-                        .toList();
-                  });
-                },
-                controller: searchController,
-                decoration: const InputDecoration(
-                    suffixIcon: Icon(Icons.search),
-                    hintText: "Search Product here",
-                    hintStyle: TextStyle(color: Colors.grey),
-                    focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent))),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.all(10),
+                height: 45,
+                padding: EdgeInsets.only(left: 20),
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.black)),
+                child: TextFormField(
+                  onChanged: (String value) {
+                    setState(() {
+                      searchItem.searchResultList = searchItem.resultList
+                          .where((element) => element.brand!.slug!
+                              .startsWith(searchController.text))
+                          .toList();
+                    });
+                  },
+                  controller: searchController,
+                  decoration: const InputDecoration(
+                      suffixIcon: Icon(Icons.search),
+                      hintText: "Search Product here",
+                      hintStyle: TextStyle(color: Colors.grey),
+                      focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent))),
+                ),
               ),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * .8,
-              width: MediaQuery.of(context).size.width,
-              child: searchResultList.isNotEmpty
-                  ? GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 2 / 3,
-                      ),
-                      itemCount: searchResultList
-                          .length, //_searchSuggestion!.data!.products!.results!.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              ProductDetailsScreen.routeName,
-                              arguments: SearchScreen(
-                                productName: product[index]
-                                    .productName, //'${_searchSuggestion!.data!.products!.results![item].productName}',
-                                image: product[index]
-                                    .image, //'${_searchSuggestion!.data!.products!.results![index].image}' ,
-                                details: product[index]
-                                    .description, //'${_searchSuggestion!.data!.products!.results![index].description}',
-                                brand: product[index]
-                                    .brand!
-                                    .name, //'${_searchSuggestion!.data!.products!.results![index].brand!.name}',
-                                purchase: product[index]
-                                    .charge!
-                                    .currentCharge
-                                    .toString(), //,'${_searchSuggestion!.data!.products!.results![index].charge!.currentCharge}',
-                                profit: product[index]
-                                    .charge!
-                                    .profit
-                                    .toString(), //'${_searchSuggestion!.data!.products!.results![index].charge!.profit}',
-                                selling: product[index]
-                                    .charge!
-                                    .sellingPrice
-                                    .toString(), //'${_searchSuggestion!.data!.products!.results![index].charge!.sellingPrice}' ,
-                                // distributor: '${_searchSuggestion!.data!.products!.results![item].}',
-                              ),
-                            );
-                          },
-                          child: GridTile(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10)),
-                              // height: ,
-                              child: Column(
-                                //mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Image.network(
-                                    '${searchResultList[index].image}',
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      '${searchResultList[index].productName}',
-                                      overflow: TextOverflow.ellipsis,
+              Container(
+                height: MediaQuery.of(context).size.height * .9,
+                width: MediaQuery.of(context).size.width,
+                child: searchItem.searchResultList.isNotEmpty
+                    ? GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 2 / 3,
+                        ),
+                        itemCount: searchItem.searchResultList
+                            .length, //_searchSuggestion!.data!.products!.results!.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                ProductDetailsScreen.routeName,
+                                arguments: SearchScreen(
+                                  productName: searchItem
+                                      .searchResultList[index]
+                                      .productName, //'${_searchSuggestion!.data!.products!.results![item].productName}',
+                                  image: searchItem.searchResultList[index]
+                                      .image, //'${_searchSuggestion!.data!.products!.results![index].image}' ,
+                                  details: searchItem.searchResultList[index]
+                                      .description, //'${_searchSuggestion!.data!.products!.results![index].description}',
+                                  brand: searchItem
+                                      .searchResultList[index]
+                                      .brand!
+                                      .name, //'${_searchSuggestion!.data!.products!.results![index].brand!.name}',
+                                  purchase: searchItem.searchResultList[index]
+                                      .charge!.currentCharge
+                                      .toString(), //,'${_searchSuggestion!.data!.products!.results![index].charge!.currentCharge}',
+                                  profit: searchItem
+                                      .searchResultList[index].charge!.profit
+                                      .toString(), //'${_searchSuggestion!.data!.products!.results![index].charge!.profit}',
+                                  selling: searchItem.searchResultList[index]
+                                      .charge!.sellingPrice
+                                      .toString(), //'${_searchSuggestion!.data!.products!.results![index].charge!.sellingPrice}' ,
+                                  // distributor: '${_searchSuggestion!.data!.products!.results![item].}',
+                                ),
+                              );
+                            },
+                            child: GridTile(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10)),
+                                // height: ,
+                                child: Column(
+                                  //mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Image.network(
+                                      '${searchItem.searchResultList[index].image}',
+                                      fit: BoxFit.cover,
                                     ),
-                                  ),
-                                  Flexible(
-                                    child: Text(
-                                      'brand: ${resultList[index].brand!.name}',
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.start,
+                                    Flexible(
+                                      child: Text(
+                                        '${searchItem.searchResultList[index].productName}',
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                  ),
-                                  Row(
-                                    children: [
-                                      RichText(
-                                        text: TextSpan(
-                                          text: 'ক্রয় ',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.black),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                                text:
-                                                    '${searchResultList[index].charge!.currentCharge}',
-                                                style: const TextStyle(
-                                                    color: Colors.pink,
-                                                    fontWeight:
-                                                        FontWeight.w600)),
+                                    Flexible(
+                                      child: Text(
+                                        'brand: ${searchItem.searchResultList[index].brand!.name}',
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.start,
+                                      ),
+                                    ),
+                                    Row(
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            text: 'ক্রয় ',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.black),
+                                            children: <TextSpan>[
+                                              TextSpan(
+                                                  text:
+                                                      '${searchItem.searchResultList[index].charge!.currentCharge}',
+                                                  style: const TextStyle(
+                                                      color: Colors.pink,
+                                                      fontWeight:
+                                                          FontWeight.w600)),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Row(
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                text: 'বিক্রয় ',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black),
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                      text:
+                                                          '${searchItem.searchResultList[index].charge!.sellingPrice}',
+                                                      style: const TextStyle(
+                                                          color: Colors.pink,
+                                                          fontWeight:
+                                                              FontWeight.w600)),
+                                                ],
+                                              ),
+                                            )
                                           ],
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          RichText(
-                                            text: TextSpan(
-                                              text: 'বিক্রয় ',
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text:
-                                                        '${searchResultList[index].charge!.sellingPrice}',
-                                                    style: const TextStyle(
-                                                        color: Colors.pink,
-                                                        fontWeight:
-                                                            FontWeight.w600)),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          RichText(
-                                            text: TextSpan(
-                                              text: 'লাভ ',
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black),
-                                              children: <TextSpan>[
-                                                TextSpan(
-                                                    text:
-                                                        '${searchResultList[index].charge!.profit}',
-                                                    style: const TextStyle(
-                                                        color: Colors.pink,
-                                                        fontWeight:
-                                                            FontWeight.w600)),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                        Row(
+                                          children: [
+                                            RichText(
+                                              text: TextSpan(
+                                                text: 'লাভ ',
+                                                style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black),
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                      text:
+                                                          '${searchItem.searchResultList[index].charge!.profit}',
+                                                      style: const TextStyle(
+                                                          color: Colors.pink,
+                                                          fontWeight:
+                                                              FontWeight.w600)),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              footer: FloatingActionButton(
+                                onPressed: () {},
+                                child: Icon(Icons.add),
                               ),
                             ),
-                            footer: FloatingActionButton(
-                              onPressed: () {},
-                              child: Icon(Icons.add),
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : Container(
-                      child: const Center(
-                        child: Text('No product Found'),
+                          );
+                        },
+                      )
+                    : Container(
+                        child: const Center(
+                          child: Text('No product Found'),
+                        ),
                       ),
-                    ),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
