@@ -2,16 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:q_tech_app/http_request/http_reqest.dart';
-import 'package:q_tech_app/model/model_class.dart';
 import 'package:q_tech_app/product/product_details.dart';
 import 'package:q_tech_app/provider/search_provider.dart';
 
 class SearchScreen extends StatefulWidget {
-  // const ApiTest({Key? key}) : super(key: key);
-
   String? image;
   String? productName;
   String? details;
@@ -34,69 +29,20 @@ class SearchScreen extends StatefulWidget {
   _SearchScreenState createState() => _SearchScreenState();
 }
 
-// class SearchProvider with ChangeNotifier {
-//   SearchSuggestion searchData = SearchSuggestion();
-//   bool loading = false;
-
-//   getData(context) async {
-//     loading = true;
-//     searchData = await httpRequest(context)as SearchSuggestion;
-//     loading = false;
-//    setState(() {
-//       productSearch = value;
-//       productResultsList = productSearch!.data!.products!.results!;
-//       productResultsListSearch = productResultsList;
-//     });
-//     notifyListeners();
-//   }
-
-// }
 class _SearchScreenState extends State<SearchScreen> {
   TextEditingController searchController = TextEditingController();
-  // ProductServices productServices = ProductServices();
-  // SearchSuggestion? productSearch;
 
-  // List<Results> productResultsList = [];
-  // List<Results> productResultsListSearch = [];
-
-//  Album? album;
   @override
   void initState() {
     super.initState();
     final searchItem = Provider.of<SearchProvider>(context, listen: false);
     searchItem.getData(context);
-    // setState(() {
-    //   searchItem.productResultsListSearch = searchItem.productResultsList;
-    // });
   }
 
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   getData();
-  // }
-
-  // getData() async {
-  //   // var value = await productServices.fetchAlbum();
-  //  // var value = await productServices.httpRequest(context);
-  //   setState(() {
-  //     productSearch = value;
-  //     productResultsList = productSearch!.data!.products!.results!;
-  //     productResultsListSearch = productResultsList;
-  //   });
-  // }
-  // dynamic resultList;
-  // dynamic searchResultList;
   @override
   Widget build(BuildContext context) {
     final searchItem = Provider.of<SearchProvider>(context);
-    // final product = searchItem.searchData.data!.products!.results!;
-    // var copyProduct = product;
-    // setState(() {
-    //   resultList = product;
-    //   searchResultList = resultList;
-    // });
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xFFE5E5E5),
@@ -117,6 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     setState(() {
                       searchItem.searchResultList = searchItem.resultList
                           .where((element) => element.brand!.slug!
+                              .toUpperCase()
                               .startsWith(searchController.text))
                           .toList();
                     });
@@ -151,26 +98,22 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ProductDetailsScreen.routeName,
                                 arguments: SearchScreen(
                                   productName: searchItem
-                                      .searchResultList[index]
-                                      .productName, //'${_searchSuggestion!.data!.products!.results![item].productName}',
-                                  image: searchItem.searchResultList[index]
-                                      .image, //'${_searchSuggestion!.data!.products!.results![index].image}' ,
-                                  details: searchItem.searchResultList[index]
-                                      .description, //'${_searchSuggestion!.data!.products!.results![index].description}',
+                                      .searchResultList[index].productName,
+                                  image:
+                                      searchItem.searchResultList[index].image,
+                                  details: searchItem
+                                      .searchResultList[index].description,
                                   brand: searchItem
-                                      .searchResultList[index]
-                                      .brand!
-                                      .name, //'${_searchSuggestion!.data!.products!.results![index].brand!.name}',
+                                      .searchResultList[index].brand!.name,
                                   purchase: searchItem.searchResultList[index]
                                       .charge!.currentCharge
-                                      .toString(), //,'${_searchSuggestion!.data!.products!.results![index].charge!.currentCharge}',
+                                      .toString(),
                                   profit: searchItem
                                       .searchResultList[index].charge!.profit
-                                      .toString(), //'${_searchSuggestion!.data!.products!.results![index].charge!.profit}',
+                                      .toString(),
                                   selling: searchItem.searchResultList[index]
                                       .charge!.sellingPrice
-                                      .toString(), //'${_searchSuggestion!.data!.products!.results![index].charge!.sellingPrice}' ,
-                                  // distributor: '${_searchSuggestion!.data!.products!.results![item].}',
+                                      .toString(),
                                 ),
                               );
                             },
@@ -179,7 +122,6 @@ class _SearchScreenState extends State<SearchScreen> {
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10)),
-                                // height: ,
                                 child: Column(
                                   //mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
