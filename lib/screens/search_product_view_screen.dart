@@ -3,28 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
-import 'package:q_tech_app/product/product_details.dart';
+import 'package:q_tech_app/screens/product_details.dart';
 import 'package:q_tech_app/provider/search_provider.dart';
 
 class SearchScreen extends StatefulWidget {
-  String? image;
-  String? productName;
-  String? details;
-  String? brand;
-  String? distributor;
-  String? purchase;
-  String? selling;
-  String? profit;
-  SearchScreen(
-      {this.productName,
-      this.image,
-      this.details,
-      this.brand,
-      this.distributor,
-      this.profit,
-      this.purchase,
-      this.selling});
-
   @override
   _SearchScreenState createState() => _SearchScreenState();
 }
@@ -46,7 +28,8 @@ class _SearchScreenState extends State<SearchScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xFFE5E5E5),
-        body: SingleChildScrollView(
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               Container(
@@ -63,8 +46,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     setState(() {
                       searchItem.searchResultList = searchItem.resultList
                           .where((element) => element.brand!.slug!
-                              .toUpperCase()
-                              .startsWith(searchController.text))
+                              .startsWith(searchController.text.toLowerCase()))
                           .toList();
                     });
                   },
@@ -77,11 +59,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           borderSide: BorderSide(color: Colors.transparent))),
                 ),
               ),
-              Container(
-                height: MediaQuery.of(context).size.height * .9,
-                width: MediaQuery.of(context).size.width,
-                child: searchItem.searchResultList.isNotEmpty
-                    ? GridView.builder(
+              searchItem.searchResultList.isNotEmpty
+                  ? Expanded(
+                      child: GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
@@ -94,31 +74,20 @@ class _SearchScreenState extends State<SearchScreen> {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap: () {
-                              Navigator.of(context).pushNamed(
-                                ProductDetailsScreen.routeName,
-                                arguments: SearchScreen(
-                                  productName: searchItem
-                                      .searchResultList[index].productName,
-                                  image:
-                                      searchItem.searchResultList[index].image,
-                                  details: searchItem
-                                      .searchResultList[index].description,
-                                  brand: searchItem
-                                      .searchResultList[index].brand!.name,
-                                  purchase: searchItem.searchResultList[index]
-                                      .charge!.currentCharge
-                                      .toString(),
-                                  profit: searchItem
-                                      .searchResultList[index].charge!.profit
-                                      .toString(),
-                                  selling: searchItem.searchResultList[index]
-                                      .charge!.sellingPrice
-                                      .toString(),
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetailsScreen(
+                                    slagName: searchItem
+                                        .searchResultList[index].slug
+                                        .toString(),
+                                  ),
                                 ),
                               );
                             },
                             child: GridTile(
                               child: Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 6),
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10)),
@@ -220,13 +189,57 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           );
                         },
-                      )
-                    : Container(
-                        child: const Center(
-                          child: Text('No product Found'),
+                      ),
+                    )
+                  : Expanded(
+                      child: const Center(
+                        child: Text('No product Found'),
+                      ),
+                    ),
+              Container(
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                height: 35,
+                width: MediaQuery.of(context).size.width,
+                child: Center(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          searchItem.pageDecrement();
+                          searchItem.getData(context);
+                        },
+                        child: Row(
+                          children: const [
+                            Icon(
+                              Icons.arrow_back_ios,
+                              size: 15,
+                            ),
+                            Text("Previous"),
+                          ],
                         ),
                       ),
-              ),
+                      Text("Page: " + searchItem.getPageNumber().toString()),
+                      GestureDetector(
+                        onTap: () {
+                          searchItem.pageIncrement();
+                          searchItem.getData(context);
+                        },
+                        child: Row(
+                          children: const [
+                            Text("Next"),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              size: 15,
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ),
